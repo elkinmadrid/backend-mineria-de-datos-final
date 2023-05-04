@@ -4,6 +4,7 @@ click
 colorama
 Flask
 Flask-SQLAlchemy
+gunicorn
 greenlet
 importlib-metadata
 itsdangerous
