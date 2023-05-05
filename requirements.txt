@@ -3,6 +3,7 @@ blinker
 click
 colorama
 Flask
+Flask-Cors
 Flask-SQLAlchemy
 gunicorn
 greenlet
@@ -18,6 +19,7 @@ psycopg2
 pycodestyle
 PyJWT
 SQLAlchemy
+six
 tomli
 typing-extensions
 Werkzeug
