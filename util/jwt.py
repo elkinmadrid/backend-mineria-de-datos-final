@@ -20,15 +20,15 @@ def token_required(f):
             data = jwt.decode(
                 token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
             
-            current_user = Users.get_by_id(data["public_id"])
+            query_ = QueryUsers()
+            current_user = query_.get_user_by_public_id(data["public_id"])
+            
             if current_user is None:
                 return {
                     "message": "Invalid Authentication token!",
                     "data": None,
                     "error": "Unauthorized"
                 }, 401
-            if not current_user["active"]:
-                abort(403)
         except Exception as e:
             return {
                 "message": "Something went wrong",

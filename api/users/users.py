@@ -31,3 +31,12 @@ class QueryUsers():
         datos = (username,)
         cursor.execute(query, datos)
         return cursor.fetchone()
+
+    def get_user_by_public_id(self, public_id):
+
+        query = 'SELECT * FROM users WHERE public_id = %s'
+
+        cursor = self.conexion_.conector.cursor()
+        datos = (public_id,)
+        cursor.execute(query, datos)
+        return cursor.fetchone()

@@ -1,13 +1,16 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from util.jwt import token_required
+from .dataset import QueryDataSet
 
 dataset = Blueprint('dataset', __name__)
 
 
-@dataset.route('/dataset', methods=['GET'])
+@dataset.route('/api/v1/dataset', methods=['GET'])
 @token_required
 def get_all(self):
-    return {
-        "message": "Bienvenido!"
+    query_ = QueryDataSet()
+    data = query_.get_all()
 
-    }, 200
+    return jsonify(data=data, status=200)
+
+
