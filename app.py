@@ -7,8 +7,10 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 from api.users.route import usuarios
+from api.contact_us.contact_us_route import contact_us
 app.register_blueprint(usuarios)
 app.register_blueprint(dataset)
+app.register_blueprint(contact_us)
 
 
 JWT_SECRETKEY = os.environ['JWT_SECRETKEY']
