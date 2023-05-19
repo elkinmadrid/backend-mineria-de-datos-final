@@ -6,7 +6,7 @@ class QueryDataSet():
         self.conexion_ = conexion()
 
     def delete_row(self, id):
-        query = 'DELETE FROM dataset WHERE id = %s'
+        query = 'DELETE FROM dataset_cars WHERE id = %s'
 
         datos = (id,)
 
@@ -14,9 +14,43 @@ class QueryDataSet():
         cursor.execute(query, datos)
         self.conexion_.conector.commit()
 
+    def update_row(self, data, id):
+        query = """
+        UPDATE public.dataset_cars
+        SET fueltype=%s, doornumber=%s, carbody=%s, drivewheel=%s, enginelocation=%s, carlength=%s, carwidth=%s, 
+        carheight=%s, enginetype=%s, enginesize=%s, horsepower=%s, price=%s, companyname=%s
+        WHERE id=%s
+        """
+
+        datos = (data['fueltype'], data['doornumber'], data['carbody'], data['drivewheel'], data['enginelocation'],
+                 float(data['carlength']), float(data['carwidth']), float(
+                     data['carheight']), data['enginetype'], float(data['enginesize']),
+                 float(data['horsepower']),  float(data['price']), data['companyname'], id)
+
+        cursor = self.conexion_.conector.cursor()
+        cursor.execute(query, datos)
+        self.conexion_.conector.commit()
+
+    def insert_row(self, data, id):
+        query = """
+        INSERT INTO public.dataset_cars
+        (fueltype, doornumber, carbody, drivewheel, enginelocation, carlength, carwidth, 
+        carheight, enginetype, enginesize, horsepower, price, companyname)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+
+        datos = (data['fueltype'], data['doornumber'], data['carbody'], data['drivewheel'], data['enginelocation'],
+                 float(data['carlength']), float(data['carwidth']), float(
+                     data['carheight']), data['enginetype'], float(data['enginesize']),
+                 float(data['horsepower']),  float(data['price']), data['companyname'])
+
+        cursor = self.conexion_.conector.cursor()
+        cursor.execute(query, datos)
+        self.conexion_.conector.commit()
+
     def get_all(self):
-        
-        query = 'SELECT * FROM dataset ORDER BY ID DESC'
+
+        query = 'SELECT * FROM dataset_cars ORDER BY ID ASC'
 
         cursor = self.conexion_.conector.cursor()
         cursor.execute(query)
@@ -26,20 +60,46 @@ class QueryDataSet():
 
             data.append({
                 "id": result[0],
-                "edad": result[1],
-                "created_at": result[2],
-                "anemia": result[3],
-                "creatinina_fosfoquinasa": result[4],
-                "diabetes": result[5],
-                "fraccion_de_eyeccion": result[6],
-                "presion_arterial_alta": result[7],
-                "plaquetas": result[8],
-                "creatinina_serica": result[9],
-                "sodio_serico": result[10],
-                "sexo": result[11],
-                "fumador": result[12],
-                "Seguimiento_dias": result[13],
-                "Muerte": result[14]
+                "fueltype": result[1],
+                "doornumber": result[2],
+                "carbody": result[3],
+                "drivewheel": result[4],
+                "enginelocation": result[5],
+                "carlength": result[6],
+                "carwidth": result[7],
+                "carheight": result[8],
+                "enginetype": result[9],
+                "enginesize": result[10],
+                "horsepower": result[11],
+                "price": result[12],
+                "companyname": result[14]
 
             })
+        return data
+
+    def get_all_variable_category(self):
+        query = """
+            SELECT
+                (SELECT ARRAY_AGG(DISTINCT companyname) FROM dataset_cars) AS companyname,
+                (SELECT ARRAY_AGG(DISTINCT doornumber) FROM dataset_cars) AS doornumber,
+                (SELECT ARRAY_AGG(DISTINCT enginelocation) FROM dataset_cars) AS enginelocation,
+                (SELECT ARRAY_AGG(DISTINCT drivewheel) FROM dataset_cars) AS drivewheel,
+                (SELECT ARRAY_AGG(DISTINCT fueltype) FROM dataset_cars) AS fueltype,
+                (SELECT ARRAY_AGG(DISTINCT carbody) FROM dataset_cars) AS carbody,
+                (SELECT ARRAY_AGG(DISTINCT enginetype) FROM dataset_cars) AS enginetype;
+                
+                """
+        cursor = self.conexion_.conector.cursor()
+        cursor.execute(query)
+        results = cursor.fetchall()
+        print(results)
+        data = {
+            'companyname': results[0][0],
+            'doornumber': results[0][1],
+            'enginelocation': results[0][2],
+            'drivewheel': results[0][3],
+            'fueltype': results[0][4],
+            'carbody': results[0][5],
+            'enginetype': results[0][6]
+        }
         return data

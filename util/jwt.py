@@ -29,6 +29,10 @@ def token_required(f):
                     "data": None,
                     "error": "Unauthorized"
                 }, 401
+        except jwt.ExpiredSignatureError:
+            return jsonify({'error': 'Token expirado'}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({'error': 'Token inválido'}), 401
         except Exception as e:
             return {
                 "message": "Something went wrong",
