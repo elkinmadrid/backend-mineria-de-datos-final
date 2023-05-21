@@ -24,6 +24,32 @@ class ContactUsQuery:
         cursor = self.conexion_.conector.cursor()
 
         insql = "INSERT INTO contact_us (nombre_solicitante, email, telefono, asunto, mensaje) VALUES (%s, %s, %s, %s, %s)"
-        datos = (data['nombre_solicitante'], data['email'], data['telefono'], data['asunto'], data['mensaje'])
+        datos = (data['nombre_solicitante'], data['email'],
+                 data['telefono'], data['asunto'], data['mensaje'])
         cursor.execute(insql, datos)
         self.conexion_.conector.commit()
+
+    def get_all_info(self):
+
+        cursor = self.conexion_.conector.cursor()
+
+        sql = "SELECT * FROM contact_us"
+        cursor.execute(sql)
+
+        results = cursor.fetchall()
+        dataMap = []
+        data =  map(self.to_json, results)
+
+        for item in data:
+            dataMap.append(item)
+        
+        return dataMap
+
+    def to_json(self, item):
+            return {
+            'nombre_solicitante': item[1],
+            'email': item[2],
+            'telefono': item[3],
+            'asunto': item[4],
+            'mensaje': item[5]
+        }
