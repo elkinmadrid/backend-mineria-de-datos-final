@@ -1,5 +1,6 @@
 from util.conexion import *
 
+
 class QueryDataSet():
 
     def __init__(self):
@@ -102,4 +103,79 @@ class QueryDataSet():
             'carbody': results[0][5],
             'enginetype': results[0][6]
         }
+        return data
+
+    def carbody_price(self):
+        query = """
+            select carbody, COUNT(*) as amount_vehicule, 
+            ROUND(MIN(price)::numeric, 2) AS min_price,
+            ROUND(MAX(price)::numeric, 2) as max_price,
+            ROUND(avg(price)::numeric, 2) as avg_price
+            from dataset_cars dc 
+            group by carbody order by carbody;
+        
+        """
+
+        cursor = self.conexion_.conector.cursor()
+        cursor.execute(query)
+        results = cursor.fetchall()
+        print(results)
+        data = []
+        for row in results:
+            data.append({
+                'carbody': row[0],
+                'amount_vehicule': row[1],
+                'min_price': row[2],
+                'max_price': row[3],
+                'avg_price': row[4]
+            })
+        return data
+
+    def fueltype_companyname_avg_price(self):
+        query = """
+            select fueltype as Tipo_Combustible, 
+            companyname as Marca,
+            ROUND(avg(price)::numeric, 2) as Precio_Promedio
+            from dataset_cars
+            group by fueltype, marca
+            order by fueltype, marca;
+        
+        """
+
+        cursor = self.conexion_.conector.cursor()
+        cursor.execute(query)
+        results = cursor.fetchall()
+        print(results)
+        data = []
+        for row in results:
+            data.append({
+                'fueltype': row[0],
+                'companyname': row[1],
+                'avg_price': row[2]
+            })
+        return data
+
+    def avg_horsepower_companyname(self):
+        query = """
+            select companyname as Marca,
+            ROUND(AVG(horsepower)::numeric,2) as Promedio_Potencia,
+            ROUND(MIN(price)::numeric, 2) AS precio_minimo,
+            ROUND(MAX(price)::numeric, 2) as precio_Maximo
+            from dataset_cars dc
+            group by companyname
+            order by companyname;
+        """
+
+        cursor = self.conexion_.conector.cursor()
+        cursor.execute(query)
+        results = cursor.fetchall()
+        print(results)
+        data = []
+        for row in results:
+            data.append({
+                'companyname': row[0],
+                'avg_horsepower': row[1],
+                'min_price': row[2],
+                'max_price': row[3]
+            })
         return data

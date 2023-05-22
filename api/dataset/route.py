@@ -71,3 +71,27 @@ def insert(self):
     except Exception as inst:
         print(inst)
         return {'message': 'Error inesperado'}, 500
+
+@dataset.route('/api/v1/dataset/carbody-price', methods=['GET'])
+@token_required
+def info_carbody_price(self):
+    query_ = QueryDataSet()
+    data = query_.carbody_price()
+
+    return jsonify(data=data, status=200)
+
+@dataset.route('/api/v1/dataset/fueltype-price', methods=['GET'])
+@token_required
+def info_fueltype_companyname_avg_price(self):
+    query_ = QueryDataSet()
+    data = query_.fueltype_companyname_avg_price()
+
+    return jsonify(data=data, status=200)
+
+@dataset.route('/api/v1/dataset/horsepower-price', methods=['GET'])
+@token_required
+def info_avg_horsepower_companyname(self):
+    query_ = QueryDataSet()
+    data = query_.avg_horsepower_companyname()
+
+    return jsonify(data=data, status=200)
